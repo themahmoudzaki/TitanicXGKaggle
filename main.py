@@ -1,7 +1,9 @@
 from imports import *
 
 TRAIN_DATA_FILE     = 'Data/train.csv'
+TEST_DATA_FILE      = 'Data/test.csv'
 UPDATED_DATA_FOLDER = 'Updated_Data/'
+MODEL_FOLDER        = 'Model/'
 
 def main():
     args = sys.argv
@@ -19,8 +21,17 @@ def main():
         train_y = np.load(f'{UPDATED_DATA_FOLDER}train_y')
         test_y  = np.load(f'{UPDATED_DATA_FOLDER}test_y')
     model_files = [train_X, test_X, train_y, test_y]
-    if train_flag: xgboost_model(files=model_files)
-    
+    if train_flag: model = xgboost_model(tt_files=model_files, save_folder=MODEL_FOLDER)
+    else: return # Temp
+
+    X = preprocess_data(file=TEST_DATA_FILE, split=(1, 0.0), save_folder='')
+    y_hat = model.predict(X)
+    csv_predictions = pd.DataFrame({
+        'PassengerId':  pd.read_csv(TEST_DATA_FILE)['PassengerId'],
+        'Survived':     y_hat
+    })
+    csv_predictions.to_csv('Predictions.csv', index=False)
+
     return 0
 
 if __name__ == '__main__': main()
