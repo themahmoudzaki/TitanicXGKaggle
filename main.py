@@ -22,7 +22,7 @@ def main():
         test_y  = np.load(f'{UPDATED_DATA_FOLDER}test_y')
     model_files = [train_X, test_X, train_y, test_y]
     if train_flag: model = xgboost_model(tt_files=model_files, save_folder=MODEL_FOLDER)
-    else: return # Temp
+    else: model = XGBClassifier().load_model(f'{MODEL_FOLDER}XGBmodel.json')
 
     X = preprocess_data(file=TEST_DATA_FILE, split=(1, 0.0), save_folder='')
     y_hat = model.predict(X)

@@ -12,7 +12,7 @@ def preprocess_data(file, split, save_folder):
     print('\n\n')
 
     print('Before:')
-    print(df.head())
+    print(df.head(), '\n')
     df.info()
     
     print('\n\n')
@@ -26,8 +26,8 @@ def preprocess_data(file, split, save_folder):
         train_y = np.array(train['Survived'].values, dtype=np.int32)
         test_y  = np.array(test['Survived'].values, dtype=np.int32)
 
-        train = train.drop(columns=['Survived'])
-        test = test.drop(columns=['Survived'])
+        train   = train.drop(columns=['Survived'])
+        test    = test.drop(columns=['Survived'])
 
         return_list[2] = train_y 
         return_list[3] = test_y  
@@ -36,9 +36,6 @@ def preprocess_data(file, split, save_folder):
 
     for i, data in enumerate(df): return_list[i] = preprocess_data_helper(data)
 
-    
-
-
     if save_folder != '':
         for i, np_list in enumerate(return_list):
             np.save(f'{save_folder}{FILE_NAME[i]}', np_list, allow_pickle=True)
@@ -46,12 +43,15 @@ def preprocess_data(file, split, save_folder):
     return return_list
 
 
-
 def preprocess_data_helper(data):
     data = data.drop(columns=COLUMNS_TO_DROP)
+    data.fillna(-999)
 
-    data['Sex'] = data['Sex'].map(SEX_MAP)
-    data['Embarked'] = data['Embarked'].map(EMBARKED_MAP)
+    data['FamilySize']          = data['SibSp'] + data['Parch'] + 1
+    data['FarePerFamilyMember'] = data['Fare'] / data['FamilySize']
+    data['Sex']                 = data['Sex'].map(SEX_MAP)
+    data['Embarked']            = data['Embarked'].map(EMBARKED_MAP)
+    
 
     print('\n\n')
 
