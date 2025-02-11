@@ -60,6 +60,7 @@ def preprocess_data_helper(data):
     data.info()
 
     print('\n\n')
+    print('\n\n------------------------------------------\n\n')
 
     return np.array(data.values, dtype=np.float32)
 

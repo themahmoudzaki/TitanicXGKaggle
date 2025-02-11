@@ -8,3 +8,4 @@ Tools:
 xgboost
 sklearn
 pandas
+CUDA supported GPU
